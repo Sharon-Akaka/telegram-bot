@@ -1,5 +1,6 @@
 import { Telegraf } from 'telegraf'
 import getBotTokenOrQuit from './util/getBotToken';
+import fetch from 'node-fetch';
 
 const botToken = getBotTokenOrQuit();
 
@@ -11,6 +12,19 @@ bot.hears('hello', (ctx) => ctx.reply('Ok, I heard you say hello'))
 bot.command('sing', (ctx) => ctx.reply('La la la!  I got your command.'))
 
 bot.launch()
+
+bot.command('joke', async (ctx) => {
+    const response = await fetch('https://icanhazdadjoke.com/', {
+        headers: {
+            'Accept': 'application/json'
+        },
+    });
+   const jokeReponse =  await response.json()
+   ctx.reply(jokeReponse.joke)
+   console.log(jokeReponse.joke)
+})
+
+
 
 // Enable graceful stop
 process.once('SIGINT', () => bot.stop('SIGINT'))
